@@ -1,10 +1,10 @@
-# 📊 Data Engineering & Analytics Portfolio
+**Data Engineering & Analytics Portfolio**
 
 > **Advanced portfolio** covering Azure Data Factory, Microsoft Fabric, PySpark, SQL Data Warehousing, ETL Pipelines, and Power BI — built for production-grade scenarios.
 
 ---
 
-## 🗂️ Projects Overview
+** Projects Overview**
 
 | # | Project | Stack | Focus |
 |---|---------|-------|-------|
@@ -16,7 +16,7 @@
 
 ---
 
-## 🛠️ Tech Stack
+**Tech Stack**
 
 ![Azure](https://img.shields.io/badge/Azure-0089D6?style=flat&logo=microsoft-azure&logoColor=white)
 ![Microsoft Fabric](https://img.shields.io/badge/Microsoft%20Fabric-742774?style=flat&logo=microsoft&logoColor=white)
@@ -29,10 +29,10 @@
 
 ---
 
-## 📁 Project Details
+** Project Details**
 
 ### Project 1
-## 🔄 Azure ETL Pipeline — E-Commerce Data Platform
+Azure ETL Pipeline — E-Commerce Data Platform
 End-to-end ETL pipeline ingesting raw e-commerce orders, customers, and products from Azure Blob Storage into a cleansed Azure SQL Database using Azure Data Factory and Python.
 
 **Key Features:** Incremental loads · Schema validation · Error logging · Parameterised ADF pipelines
@@ -40,7 +40,7 @@ End-to-end ETL pipeline ingesting raw e-commerce orders, customers, and products
 ---
 
 ### Project 2
-## ⚡ PySpark Lakehouse — Retail Analytics
+PySpark Lakehouse — Retail Analytics
 Multi-layer (Bronze/Silver/Gold) Delta Lakehouse built on Azure Databricks processing 10M+ retail transaction records with PySpark transformations and Delta Lake optimisations.
 
 **Key Features:** Medallion architecture · Delta merge (upsert) · Data quality checks · Optimised partitioning
@@ -48,7 +48,7 @@ Multi-layer (Bronze/Silver/Gold) Delta Lakehouse built on Azure Databricks proce
 ---
 
 ### Project 3
-## 🏛️ SQL Data Warehouse — Finance DWH
+ SQL Data Warehouse — Finance DWH
 Production-ready star schema data warehouse for a financial institution with dbt models, slowly changing dimensions (SCD Type 2), and automated testing.
 
 **Key Features:** Star schema · SCD Type 2 · dbt tests · Stored procedures · Performance tuning
@@ -56,7 +56,7 @@ Production-ready star schema data warehouse for a financial institution with dbt
 ---
 
 ### Project 4
-## 🌐 Microsoft Fabric — Real-Time Sales Intelligence
+ Microsoft Fabric — Real-Time Sales Intelligence
 Real-time sales event streaming pipeline using Microsoft Fabric Eventstream, KQL Database, and Lakehouse for sub-second analytics on live POS data.
 
 **Key Features:** Eventstream ingestion · KQL queries · Fabric notebooks · Real-time dashboard
@@ -64,14 +64,12 @@ Real-time sales event streaming pipeline using Microsoft Fabric Eventstream, KQL
 ---
 
 ### Project 5
-## 📈 Power BI — Retail Executive Dashboard
+Power BI — Retail Executive Dashboard
 Executive-level Power BI report with advanced DAX measures, row-level security, time intelligence, and a fully documented semantic model.
 
 **Key Features:** DAX time intelligence · RLS · Composite model · Deployment pipeline config
 
 ---
-
-## 🚀 Getting Started
 
 Each project has its own `README.md` with:
 - Architecture diagram
@@ -81,6 +79,4 @@ Each project has its own `README.md` with:
 
 ---
 
-## 📬 Contact
-
-Feel free to connect on [LinkedIn](#) or reach out via GitHub Issues.
+Feel free to connect on [LinkedIn](www.linkedin.com/in/hema-chinmaee-p-mba-113136406) or reach out via GitHub Issues.
