@@ -1,0 +1,35 @@
+{
+  "schema_name": "SalesEvent",
+  "version": "1.0",
+  "description": "POS sales transaction event schema for Fabric Eventstream",
+  "fields": [
+    { "name": "event_id",        "type": "string",   "required": true,  "description": "Unique event identifier (UUID)" },
+    { "name": "transaction_id",  "type": "string",   "required": true,  "description": "POS transaction ID" },
+    { "name": "store_id",        "type": "string",   "required": true,  "description": "Store identifier" },
+    { "name": "region",          "type": "string",   "required": true,  "description": "Geographic region" },
+    { "name": "product_id",      "type": "string",   "required": true,  "description": "Product SKU" },
+    { "name": "product_name",    "type": "string",   "required": false, "description": "Product display name" },
+    { "name": "quantity",        "type": "integer",  "required": true,  "description": "Units sold" },
+    { "name": "unit_price",      "type": "decimal",  "required": true,  "description": "Price per unit" },
+    { "name": "amount",          "type": "decimal",  "required": true,  "description": "Total transaction amount" },
+    { "name": "currency",        "type": "string",   "required": true,  "description": "ISO currency code" },
+    { "name": "payment_method",  "type": "string",   "required": false, "description": "cash | card | digital_wallet" },
+    { "name": "cashier_id",      "type": "string",   "required": false, "description": "Staff identifier" },
+    { "name": "event_timestamp", "type": "datetime", "required": true,  "description": "UTC event time (ISO 8601)" }
+  ],
+  "sample_event": {
+    "event_id":        "b7e3f2a1-0001-4c2d-a891-feedc0ffee00",
+    "transaction_id":  "TXN-20240615-00423",
+    "store_id":        "STR-042",
+    "region":          "NORTH",
+    "product_id":      "SKU-98712",
+    "product_name":    "Premium Coffee Blend 500g",
+    "quantity":        2,
+    "unit_price":      12.99,
+    "amount":          25.98,
+    "currency":        "GBP",
+    "payment_method":  "card",
+    "cashier_id":      "EMP-0312",
+    "event_timestamp": "2024-06-15T09:32:17Z"
+  }
+}

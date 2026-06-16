@@ -1,0 +1,64 @@
+// ============================================================
+// KQL Queries — Real-Time Sales Intelligence
+// Microsoft Fabric KQL Database
+// ============================================================
+
+
+// ── 1. Live Sales in Last 5 Minutes ─────────────────────────
+SalesEvents
+| where ingestion_time() > ago(5m)
+| summarize
+    total_revenue    = sum(amount),
+    transaction_count = count(),
+    unique_stores    = dcount(store_id)
+| project total_revenue, transaction_count, unique_stores
+
+
+// ── 2. Revenue by Store (Sliding 1-Hour Window) ─────────────
+SalesEvents
+| where ingestion_time() > ago(1h)
+| summarize
+    revenue     = sum(amount),
+    txn_count   = count()
+    by store_id, region
+| order by revenue desc
+
+
+// ── 3. Anomaly Detection — Revenue Spike Alert ──────────────
+SalesEvents
+| where ingestion_time() > ago(30m)
+| make-series revenue = sum(amount) on ingestion_time()
+    from ago(30m) to now() step 1m
+    by store_id
+| extend anomalies = series_decompose_anomalies(revenue, 1.5)
+| mv-expand ingestion_time, revenue, anomalies
+| where anomalies != 0
+| project store_id, ingestion_time, revenue, anomalies
+
+
+// ── 4. Top 10 Products — Last Hour ──────────────────────────
+SalesEvents
+| where ingestion_time() > ago(1h)
+| summarize
+    units_sold  = sum(quantity),
+    revenue     = sum(amount)
+    by product_id, product_name
+| top 10 by revenue desc
+
+
+// ── 5. Running Total Revenue — Today ────────────────────────
+SalesEvents
+| where startofday(ingestion_time()) == startofday(now())
+| make-series cumulative_revenue = sum(amount)
+    on ingestion_time()
+    from startofday(now()) to now() step 15m
+| mv-expand ingestion_time, cumulative_revenue
+| extend cumulative_revenue = row_cumsum(toreal(cumulative_revenue))
+| project ingestion_time, cumulative_revenue
+
+
+// ── 6. Transactions Per Minute (TPM) ────────────────────────
+SalesEvents
+| where ingestion_time() > ago(15m)
+| summarize tpm = count() by bin(ingestion_time(), 1m)
+| order by ingestion_time asc
