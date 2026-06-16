@@ -1,0 +1,113 @@
+// ============================================================
+// DAX Measures — Retail Executive Dashboard
+// Time Intelligence & KPI Measures
+// ============================================================
+
+
+// ── Base Measures ────────────────────────────────────────────
+
+Total Revenue =
+SUMX(
+    fact_sales,
+    fact_sales[quantity] * fact_sales[unit_price]
+)
+
+Total Units Sold =
+SUM(fact_sales[quantity])
+
+Total Transactions =
+DISTINCTCOUNT(fact_sales[transaction_id])
+
+Gross Margin % =
+DIVIDE(
+    SUM(fact_sales[gross_profit]),
+    [Total Revenue],
+    0
+)
+
+
+// ── Time Intelligence ─────────────────────────────────────────
+
+Revenue YTD =
+TOTALYTD([Total Revenue], dim_date[full_date])
+
+Revenue MTD =
+TOTALMTD([Total Revenue], dim_date[full_date])
+
+Revenue QTD =
+TOTALQTD([Total Revenue], dim_date[full_date])
+
+Revenue LY =
+CALCULATE(
+    [Total Revenue],
+    SAMEPERIODLASTYEAR(dim_date[full_date])
+)
+
+Revenue YoY % =
+DIVIDE(
+    [Total Revenue] - [Revenue LY],
+    [Revenue LY],
+    BLANK()
+)
+
+Revenue 3M Rolling Avg =
+CALCULATE(
+    [Total Revenue],
+    DATESINPERIOD(dim_date[full_date], LASTDATE(dim_date[full_date]), -3, MONTH)
+)
+
+Revenue vs Budget % =
+DIVIDE(
+    [Total Revenue] - SUM(fact_budget[budget_amount]),
+    SUM(fact_budget[budget_amount]),
+    BLANK()
+)
+
+
+// ── Customer KPIs ─────────────────────────────────────────────
+
+Active Customers =
+DISTINCTCOUNT(fact_sales[customer_id])
+
+Avg Revenue Per Customer =
+DIVIDE([Total Revenue], [Active Customers], 0)
+
+Repeat Purchase Rate =
+VAR customers_with_2plus =
+    COUNTROWS(
+        FILTER(
+            VALUES(fact_sales[customer_id]),
+            CALCULATE(DISTINCTCOUNT(fact_sales[transaction_id])) >= 2
+        )
+    )
+RETURN
+    DIVIDE(customers_with_2plus, [Active Customers], 0)
+
+
+// ── Dynamic Ranking ───────────────────────────────────────────
+
+Product Revenue Rank =
+RANKX(
+    ALL(dim_product[product_name]),
+    [Total Revenue],
+    ,
+    DESC,
+    DENSE
+)
+
+Top N Products Filter =
+VAR selected_n = SELECTEDVALUE(param_TopN[TopN], 10)
+RETURN
+    IF([Product Revenue Rank] <= selected_n, 1, 0)
+
+
+// ── KPI Formatting ────────────────────────────────────────────
+
+Revenue KPI Status =
+SWITCH(
+    TRUE(),
+    [Revenue YoY %] >= 0.10, "↑ Strong",
+    [Revenue YoY %] >= 0,    "↑ Positive",
+    [Revenue YoY %] >= -0.05,"↓ Slight Decline",
+    "↓ Decline"
+)
