@@ -1,0 +1,4 @@
+{
+  "blob_connection_string": "DefaultEndpointsProtocol=https;AccountName=YOUR_ACCOUNT;AccountKey=YOUR_KEY;EndpointSuffix=core.windows.net",
+  "sql_connection_string": "DRIVER={ODBC Driver 18 for SQL Server};SERVER=YOUR_SERVER.database.windows.net;DATABASE=YOUR_DB;UID=YOUR_USER;PWD=YOUR_PASSWORD"
+}

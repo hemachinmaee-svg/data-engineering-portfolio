@@ -1,0 +1,52 @@
+{
+  "name": "pipeline_orders_etl",
+  "properties": {
+    "description": "Incremental ETL pipeline: Blob Storage → Azure SQL (Orders)",
+    "parameters": {
+      "container_name": { "type": "String", "defaultValue": "raw-data" },
+      "blob_name":      { "type": "String", "defaultValue": "orders.csv" }
+    },
+    "activities": [
+      {
+        "name": "GetWatermark",
+        "type": "Lookup",
+        "typeProperties": {
+          "source": {
+            "type": "AzureSqlSource",
+            "sqlReaderQuery": "SELECT ISNULL(MAX(last_load), '2000-01-01') AS last_load FROM dbo.etl_watermark WHERE entity = 'orders'"
+          },
+          "dataset": { "referenceName": "ds_azure_sql", "type": "DatasetReference" }
+        }
+      },
+      {
+        "name": "RunPythonETL",
+        "type": "AzureFunctionActivity",
+        "dependsOn": [{ "activity": "GetWatermark", "dependencyConditions": ["Succeeded"] }],
+        "typeProperties": {
+          "functionName": "etl_orders",
+          "method": "POST",
+          "body": {
+            "watermark": "@activity('GetWatermark').output.firstRow.last_load",
+            "container": "@pipeline().parameters.container_name",
+            "blob": "@pipeline().parameters.blob_name"
+          }
+        },
+        "linkedServiceName": { "referenceName": "ls_azure_function", "type": "LinkedServiceReference" }
+      },
+      {
+        "name": "LogPipelineRun",
+        "type": "SqlServerStoredProcedure",
+        "dependsOn": [{ "activity": "RunPythonETL", "dependencyConditions": ["Succeeded"] }],
+        "typeProperties": {
+          "storedProcedureName": "dbo.usp_log_pipeline_run",
+          "storedProcedureParameters": {
+            "pipeline_name": { "value": "pipeline_orders_etl", "type": "String" },
+            "status":        { "value": "Success", "type": "String" },
+            "run_at":        { "value": "@utcnow()", "type": "String" }
+          }
+        },
+        "linkedServiceName": { "referenceName": "ls_azure_sql", "type": "LinkedServiceReference" }
+      }
+    ]
+  }
+}
